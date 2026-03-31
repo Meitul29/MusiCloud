@@ -46,7 +46,9 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
+            transition: transform 0.3s ease;
         }
+        .glass-card:hover { transform: translateY(-5px); }
 
         .glass-input {
             background: rgba(255, 255, 255, 0.1);
@@ -65,6 +67,7 @@
         }
 
         .glass-btn:hover:not(:disabled) { background: rgba(125, 211, 252, 0.5); transform: translateY(-1px); }
+        .glass-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         
         .heart-btn {
             transition: all 0.2s ease;
@@ -83,6 +86,17 @@
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(2, 132, 199, 0.2); border-radius: 3px; }
         .hidden-nav { display: none; }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(2, 132, 199, 0.2);
+            border-top: 3px solid #0284C7;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="p-6 md:p-12 text-musicblue-dark">
@@ -100,9 +114,9 @@
     </header>
 
     <main class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <nav id="sidebar" class="hidden-nav glass-panel lg:block lg:col-span-1 p-6 space-y-4">
-            <h3 class="text-xl font-semibold mb-6 px-3">Navigation</h3>
-            <button onclick="showSection('recommender')" class="w-full text-left glass-btn px-5 py-3 block" data-active="true">Music Recommender</button>
+        <nav id="sidebar" class="hidden-nav lg:block lg:col-span-1 p-6 space-y-4 glass-panel">
+            <h3 class="text-xl font-semibold mb-6 px-3 text-musicblue-dark">Navigation</h3>
+            <button onclick="showSection('recommender')" class="w-full text-left glass-btn px-5 py-3 block">Music Recommender</button>
             <button onclick="showSection('playlist')" class="w-full text-left glass-btn px-5 py-3 block">Liked Collection</button>
             <button onclick="showSection('events')" class="w-full text-left glass-btn px-5 py-3 block">Event Management</button>
         </nav>
@@ -113,30 +127,34 @@
                 <div class="mb-10">
                     <h2 class="text-4xl font-bold text-musicblue-dark mb-4">Discover the <span class="font-normal italic">sound</span> of Musicloud AI</h2>
                     <div class="flex gap-3">
-                        <span class="glass-card px-4 py-1.5 text-xs">Smart Recommendations</span>
-                        <span class="glass-card px-4 py-1.5 text-xs">Spotify Previews</span>
+                        <span class="glass-card px-4 py-1.5 text-xs">Parallel AI Processing</span>
+                        <span class="glass-card px-4 py-1.5 text-xs">Spotify Integration</span>
                     </div>
                 </div>
 
                 <div class="relative mb-12">
-                    <input type="text" id="songSearch" placeholder="Search a song (e.g., 'Yellow')" class="w-full glass-input glass-card p-5 pl-14 text-xl rounded-full">
+                    <input type="text" id="songSearch" placeholder="Search a song (e.g., 'Yellow')" class="w-full glass-input glass-card p-5 pl-14 text-xl rounded-full focus:outline-none focus:ring-2 focus:ring-musicblue">
                     <span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-musicblue text-3xl">search</span>
-                    <div id="autocompleteList" class="absolute top-full left-0 right-0 mt-2 glass-panel p-3 max-h-60 overflow-y-auto hidden custom-scrollbar z-10"></div>
+                    <div id="autocompleteList" class="absolute top-full left-0 right-0 mt-2 glass-panel p-3 max-h-60 overflow-y-auto hidden custom-scrollbar z-50"></div>
                 </div>
 
                 <div class="mb-6 flex justify-between items-center">
                     <p class="font-medium">Selected: <span id="selectedSongName" class="font-bold text-musicblue-dark">None</span></p>
                     <button onclick="getRecommendations()" id="recommendBtn" class="glass-btn px-8 py-3 flex items-center gap-2 font-semibold">
-                        Show Recommendation <span class="material-symbols-outlined">auto_awesome</span>
+                        <div id="btnContent" class="flex items-center gap-2">
+                            Show Recommendation <span class="material-symbols-outlined">auto_awesome</span>
+                        </div>
+                        <div id="btnLoader" class="hidden flex items-center gap-2">
+                            <div class="spinner"></div> <span>Analyzing...</span>
+                        </div>
                     </button>
                 </div>
 
                 <div id="recommendationsGrid" class="grid grid-cols-2 md:grid-cols-5 gap-5 hidden"></div>
-                <div id="recLoading" class="text-center py-10 hidden">Fetching from Spotify...</div>
             </div>
 
             <div id="playlistSection" class="content-section hidden">
-                <h2 class="text-3xl font-bold mb-8">My Liked Collection</h2>
+                <h2 class="text-3xl font-bold mb-8">My Liked Collection ❤️</h2>
                 <div id="playlistGrid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
             </div>
 
@@ -148,22 +166,24 @@
                         <button onclick="toggleEventView('view')" class="glass-btn px-4 py-2 text-sm">View Events</button>
                     </div>
                 </div>
+
                 <div id="addEventForm" class="glass-card p-6 space-y-4">
                     <input type="text" id="eventName" placeholder="Event Name" class="glass-input p-3 w-full rounded-xl">
                     <input type="datetime-local" id="eventTime" class="glass-input p-3 w-full rounded-xl">
                     <div class="grid grid-cols-2 gap-4">
                         <input type="number" id="eventCapacity" placeholder="Capacity" class="glass-input p-3 rounded-xl">
-                        <input type="number" id="eventCharges" placeholder="Price ($)" class="glass-input p-3 rounded-xl">
+                        <input type="number" id="eventCharges" placeholder="Price (INR)" class="glass-input p-3 rounded-xl">
                     </div>
                     <button onclick="addEvent()" class="glass-btn w-full py-3 font-bold">Create Event</button>
                 </div>
+
                 <div id="eventsList" class="hidden space-y-4"></div>
             </div>
         </section>
     </main>
 
     <script>
-        // --- Core State & Navigation ---
+        // --- State Management ---
         let allSongs = [];
         let selectedSong = null;
 
@@ -171,7 +191,11 @@
         const songSearch = document.getElementById('songSearch');
         const autocompleteList = document.getElementById('autocompleteList');
         const recsGrid = document.getElementById('recommendationsGrid');
+        const btnContent = document.getElementById('btnContent');
+        const btnLoader = document.getElementById('btnLoader');
+        const recommendBtn = document.getElementById('recommendBtn');
 
+        // --- Navigation ---
         document.getElementById('menuButton').addEventListener('click', () => sidebar.classList.toggle('hidden-nav'));
 
         function showSection(sectionId) {
@@ -181,23 +205,24 @@
             if (sectionId === 'events') loadEvents();
         }
 
-        // --- Recommendation Logic ---
+        // --- Autocomplete Logic ---
         async function fetchSongs() {
             try {
                 const res = await fetch('/api/songs');
                 allSongs = await res.json();
-            } catch (e) { console.error("Error loading songs"); }
+            } catch (e) { console.error("Could not fetch song list."); }
         }
 
         songSearch.addEventListener('input', (e) => {
             const val = e.target.value.toLowerCase();
             autocompleteList.innerHTML = '';
             if (!val) { autocompleteList.classList.add('hidden'); return; }
+            
             const matches = allSongs.filter(s => s.toLowerCase().includes(val)).slice(0, 10);
             if (matches.length > 0) {
                 matches.forEach(song => {
                     const item = document.createElement('div');
-                    item.className = 'px-4 py-2 cursor-pointer hover:bg-musicblue/20 rounded-lg';
+                    item.className = 'px-4 py-2 cursor-pointer hover:bg-musicblue/20 rounded-lg text-musicblue-dark';
                     item.textContent = song;
                     item.onclick = () => {
                         selectedSong = song;
@@ -211,15 +236,27 @@
             }
         });
 
+        // --- Recommendation Logic (High Speed) ---
         async function getRecommendations() {
-            if (!selectedSong) return alert("Select a song first");
-            document.getElementById('recLoading').classList.remove('hidden');
+            if (!selectedSong) { alert("Please select a song first!"); return; }
+            
+            // Start Loading
+            btnContent.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+            recommendBtn.disabled = true;
             recsGrid.classList.add('hidden');
 
-            const res = await fetch(`/api/recommend?song=${encodeURIComponent(selectedSong)}`);
-            const data = await res.json();
-            renderRecommendations(data);
-            document.getElementById('recLoading').classList.add('hidden');
+            try {
+                const res = await fetch(`/api/recommend?song=${encodeURIComponent(selectedSong)}`);
+                const data = await res.json();
+                renderRecommendations(data);
+            } catch (e) {
+                alert("Error fetching recommendations.");
+            } finally {
+                btnContent.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
+                recommendBtn.disabled = false;
+            }
         }
 
         function renderRecommendations(recs) {
@@ -227,45 +264,58 @@
             recs.forEach(rec => {
                 const card = document.createElement('div');
                 card.className = 'glass-card p-4 space-y-2 relative group';
-                const audioTag = rec.preview ? `<audio controls><source src="${rec.preview}" type="audio/mpeg"></audio>` : `<p class="text-[10px] opacity-40 italic mt-2 text-center">No preview</p>`;
                 
+                const previewHtml = rec.preview
+                    ? `<audio controls><source src="${rec.preview}" type="audio/mpeg"></audio>`
+                    : `<p class="text-[10px] opacity-40 italic mt-2 text-center">Preview unavailable</p>`;
+
                 card.innerHTML = `
                     <div class="relative overflow-hidden rounded-xl">
-                        <img src="${rec.poster}" class="w-full aspect-square object-cover">
+                        <img src="${rec.poster}" class="w-full aspect-square object-cover" loading="lazy">
                         <button onclick='likeSong(${JSON.stringify(rec)})' class="absolute top-2 right-2 p-2 bg-black/20 backdrop-blur-md rounded-full heart-btn">
                             <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
                         </button>
                     </div>
-                    <p class="font-bold text-sm truncate">${rec.title}</p>
+                    <p class="font-bold text-sm truncate mt-1">${rec.title}</p>
                     <p class="text-xs opacity-60 truncate">${rec.artist}</p>
-                    ${audioTag}
+                    ${previewHtml}
                 `;
                 recsGrid.appendChild(card);
             });
             recsGrid.classList.remove('hidden');
         }
 
-        // --- Liked Collection Logic ---
+        // --- Liked Collection ---
+        // Ensure this exists in your script block
         async function likeSong(song) {
-            await fetch('/api/like', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(song)
-            });
-            alert("Added to Liked Collection ❤️");
+            try {
+                const response = await fetch('/api/like', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(song)
+                });
+                if (response.ok) {
+                    alert("Added to Liked Collection ❤️");
+                }
+            } catch (e) {
+                console.error("Error liking song:", e);
+            }
         }
 
         async function loadPlaylist() {
             const grid = document.getElementById('playlistGrid');
-            grid.innerHTML = 'Loading...';
+            grid.innerHTML = '<div class="spinner"></div>';
             const res = await fetch('/api/playlist');
             const data = await res.json();
             grid.innerHTML = '';
-            if (data.length === 0) grid.innerHTML = '<p class="col-span-4 opacity-50">Your collection is empty.</p>';
+            if (data.length === 0) {
+                grid.innerHTML = '<p class="col-span-4 opacity-50 italic">Your collection is currently empty.</p>';
+                return;
+            }
             data.forEach(item => {
                 grid.innerHTML += `
                     <div class="glass-card p-4 text-center">
-                        <img src="${item.poster}" class="rounded-lg mb-3">
+                        <img src="${item.poster}" class="rounded-lg mb-3 shadow-lg">
                         <p class="font-bold text-sm truncate">${item.title}</p>
                         <p class="text-xs opacity-60">${item.artist}</p>
                     </div>
@@ -273,14 +323,117 @@
             });
         }
 
-        // --- Events Logic (Placeholders for your logic) ---
+        // --- Event Management Logic ---
         function toggleEventView(v) {
             document.getElementById('addEventForm').classList.toggle('hidden', v !== 'add');
             document.getElementById('eventsList').classList.toggle('hidden', v !== 'view');
         }
 
-        // Initial Load
+        async function addEvent() {
+            const data = {
+                name: document.getElementById('eventName').value,
+                time: document.getElementById('eventTime').value,
+                capacity: document.getElementById('eventCapacity').value,
+                charges: document.getElementById('eventCharges').value
+            };
+
+            if(!data.name || !data.time) { alert("Please fill in event name and time."); return; }
+
+            const res = await fetch('/api/events', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if(res.ok) {
+                alert("Event Created Successfully!");
+                document.getElementById('eventName').value = '';
+                toggleEventView('view');
+                loadEvents();
+            }
+        }
+
+        async function loadEvents() {
+    const list = document.getElementById('eventsList');
+    const res = await fetch('/api/events');
+    const events = await res.json();
+    list.innerHTML = '';
+    
+    events.forEach(e => {
+        const isFull = e.participants.length >= e.capacity;
+        const item = document.createElement('div');
+        item.className = 'glass-card p-6 mb-4';
+        item.innerHTML = `
+            <div class="flex justify-between items-start">
+                <div>
+                    <h4 class="text-xl font-bold">${e.event_name}</h4>
+                    <p class="text-sm opacity-70">${e.event_time}</p>
+                    <p class="text-xs mt-1 font-bold ${isFull ? 'text-red-500' : 'text-green-600'}">
+                        Slot: ${e.participants.length} / ${e.capacity} ${isFull ? '(FULL)' : ''}
+                    </p>
+                </div>
+                <button onclick="deleteEvent(${e.event_id})" class="text-red-400">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+            </div>
+            
+            <div class="mt-4 flex gap-2">
+                <input type="text" id="userInput-${e.event_id}" placeholder="Your Name"
+                       class="glass-input p-2 text-sm rounded-lg flex-grow" ${isFull ? 'disabled' : ''}>
+                <button onclick="joinEvent(${e.event_id})"
+                        class="glass-btn px-4 py-2 text-sm font-bold" ${isFull ? 'disabled' : ''}>
+                    ${isFull ? 'Closed' : 'Join Event'}
+                </button>
+            </div>
+        `;
+        list.appendChild(item);
+    });
+}
+        async function joinEvent(eventId) {
+    const nameInput = document.getElementById(`userInput-${eventId}`);
+    const userName = nameInput.value.trim();
+
+    if (!userName) {
+        alert("Please enter your name to join.");
+        return;
+    }
+
+    const data = { 
+        event_id: eventId, 
+        user_name: userName 
+    };
+
+    try {
+        const response = await fetch('/api/participate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert("Success! You have joined the event.");
+            nameInput.value = ''; // Clear the input
+            loadEvents(); // Refresh the list to show updated slots
+        } else {
+            alert(result.error || "Failed to join event.");
+        }
+    } catch (e) {
+        console.error("Error:", e);
+        alert("Could not connect to server.");
+    }
+}
+
+        async function deleteEvent(id) {
+            if(!confirm("Delete this event?")) return;
+            await fetch(`/api/events?id=${id}`, { method: 'DELETE' });
+            loadEvents();
+        }
+
+        // Initial Start
         fetchSongs();
+        showSection('recommender');
     </script>
 </body>
 </html>
