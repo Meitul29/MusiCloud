@@ -1,33 +1,75 @@
-# Environment variables
-.env
-
-# Python cache
+# ==========================================
+# 🐍 Python & Machine Learning Artifacts
+# ==========================================
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Virtual environment
-venv/
+*.py[cod]
+*$py.class
+*.elc
+.Python
 env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
 .venv/
-.env/
+ENV/
+env.bak/
+venv.bak/
 
+# ==========================================
+# 📊 Dataset Binary Files (Large Files)
+# ==========================================
+# Do not track your generated serialized pickle matrices
 *.pkl
+*.pickle
+*.joblib
 
-# Streamlit cache
-.streamlit/
+# If your raw CSV dataset is massive, uncomment the line below:
+# *.csv
 
-# System files
-.DS_Store
+# ==========================================
+# 🔑 Security & Environment Variables
+# ==========================================
+# Local environment variables containing private API keys
+.env
+.flaskenv
+
+# ==========================================
+# 💻 Operating System Clutter & IDEs
+# ==========================================
+# Windows
 Thumbs.db
+Ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
 
-# Logs
-*.log
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
 
-# IDE settings
+# IDEs (VS Code / PyCharm)
 .vscode/
 .idea/
-*.sublime-project
-*.sublime-workspace
-*.pkl
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
