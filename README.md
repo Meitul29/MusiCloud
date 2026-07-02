@@ -102,4 +102,3 @@ Your local development server will start. Open your web browser and navigate to 
 * **Text Vectors**: Frozen inside `df.pkl` and `similarity.pkl`
 
 ```
-```
