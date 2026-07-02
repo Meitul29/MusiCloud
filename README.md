@@ -11,7 +11,7 @@ An AI-powered music discovery platform and community hub that utilizes **Flask**
 - **🖼️ Real-Time Album Art**: Dynamically fetches high-resolution album cover imagery via external API indexing to build an immersive user interface.
 
 ## 📁 Project Structure
-`
+````
 ├── app.py                      # Core Flask backend application & API routing
 ├── data_cleaning.py            # Cleans raw lyrics text and creates memory-efficient artifacts
 ├── spotify_millsongdata.csv    # Historical music library and lyrics dataset
@@ -23,7 +23,7 @@ An AI-powered music discovery platform and community hub that utilizes **Flask**
 ├── .env                        # Private access keys and environmental variable strings
 └── README.md                   # System configuration and usage guide
 
-`
+````
 
 ## 🚀 Installation & Setup
 
@@ -102,5 +102,4 @@ Your local development server will start. Open your web browser and navigate to 
 * **Text Vectors**: Frozen inside `df.pkl` and `similarity.pkl`
 
 ```
-
 ```
