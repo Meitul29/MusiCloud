@@ -33,61 +33,52 @@
         }
 
         .glass-panel {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            transition: transform 0.3s ease;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .glass-card:hover { transform: translateY(-5px); }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.55);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.05);
+        }
 
         .glass-input {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #0284C7;
-        }
-
-        .glass-btn {
-            background: rgba(125, 211, 252, 0.3);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 9999px;
-            color: #0284C7;
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             transition: all 0.3s ease;
         }
 
-        .glass-btn:hover:not(:disabled) { background: rgba(125, 211, 252, 0.5); transform: translateY(-1px); }
-        .glass-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        
-        .heart-btn {
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.6);
+            border-color: #0284C7;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+        }
+
+        .glass-btn {
+            background: rgba(2, 132, 199, 0.1);
+            border: 1px solid rgba(2, 132, 199, 0.2);
+            color: #0284C7;
             transition: all 0.2s ease;
-            color: rgba(255, 255, 255, 0.8);
         }
-        .heart-btn:hover { transform: scale(1.2); color: #ef4444; }
 
-        audio {
-            height: 30px;
-            width: 100%;
-            filter: opacity(0.6) sepia(10%) saturate(50%);
-            margin-top: 8px;
+        .glass-btn:hover {
+            background: #0284C7;
+            color: white;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
         }
-        audio:hover { filter: opacity(1); }
-
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(2, 132, 199, 0.2); border-radius: 3px; }
-        .hidden-nav { display: none; }
-
-        /* Loading Spinner */
+        
         .spinner {
             width: 24px;
             height: 24px;
@@ -96,226 +87,351 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="p-6 md:p-12 text-musicblue-dark">
 
-    <header class="flex items-center justify-between mb-10">
-        <div class="flex items-center gap-3">
-            <div class="glass-card w-12 h-12 flex items-center justify-center rounded-2xl border border-white/20">
-                <span class="material-symbols-outlined text-musicblue-dark" style="font-variation-settings: 'FILL' 1; font-size: 30px;">
-                    music_note
-                </span>
+    <div id="authView" class="flex items-center justify-center min-h-[80vh]">
+        <div class="glass-panel p-8 w-full max-w-md space-y-6 rounded-3xl">
+            <div class="text-center space-y-2">
+                <div class="glass-card w-16 h-16 flex items-center justify-center rounded-2xl mx-auto">
+                    <span class="material-symbols-outlined text-musicblue-dark" style="font-size: 32px;">music_note</span>
+                </div>
+                <h2 id="authTitle" class="text-3xl font-bold tracking-tight">Welcome to Musicloud</h2>
+                <p id="authSubtitle" class="text-sm opacity-70">Log in to start your musical journey</p>
             </div>
-            <h1 class="text-3xl font-bold tracking-tight">Musicloud</h1>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs font-semibold px-1 opacity-80">Username</label>
+                    <input type="text" id="authUsername" placeholder="Enter username" class="w-full glass-input p-3 rounded-xl focus:outline-none mt-1">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold px-1 opacity-80">Password</label>
+                    <input type="password" id="authPassword" placeholder="Enter password" class="w-full glass-input p-3 rounded-xl focus:outline-none mt-1">
+                </div>
+                <button id="authPrimaryBtn" onclick="handleAuthSubmit()" class="w-full bg-musicblue-dark text-white p-3 rounded-xl font-bold hover:bg-musicblue-dark/90 transition shadow-md">Log In</button>
+            </div>
+
+            <div class="text-center text-sm pt-2 border-t border-white/20">
+                <span id="authToggleText" class="opacity-70">Don't have an account?</span>
+                <button id="authToggleBtn" onclick="toggleAuthMode()" class="font-bold underline ml-1 hover:text-musicblue-dark transition">Create Account</button>
+            </div>
         </div>
-        <button id="menuButton" class="lg:hidden glass-btn px-4 py-2">Menu</button>
-    </header>
+    </div>
 
-    <main class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <nav id="sidebar" class="hidden-nav lg:block lg:col-span-1 p-6 space-y-4 glass-panel">
-            <h3 class="text-xl font-semibold mb-6 px-3 text-musicblue-dark">Navigation</h3>
-            <button onclick="showSection('recommender')" class="w-full text-left glass-btn px-5 py-3 block">Music Recommender</button>
-            <button onclick="showSection('playlist')" class="w-full text-left glass-btn px-5 py-3 block">Liked Collection</button>
-            <button onclick="showSection('events')" class="w-full text-left glass-btn px-5 py-3 block">Event Management</button>
-        </nav>
+    <div id="dashboardView" class="hidden">
+        <header class="flex items-center justify-between mb-10">
+            <div class="flex items-center gap-4">
+                <div class="glass-panel p-3 rounded-2xl flex items-center justify-center">
+                    <span class="material-symbols-outlined text-3xl">music_note</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-black tracking-tight text-musicblue-dark">Musicloud</h1>
+                    <p class="text-xs opacity-60 font-medium">AI-POWERED LYRIC STREAMING</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-sm font-bold opacity-80" id="userDisplay">Welcome, Guest</p>
+                    <button onclick="handleLogout()" class="text-xs font-semibold underline text-red-500 hover:text-red-600 transition">Logout</button>
+                </div>
+            </div>
+        </header>
 
-        <section class="lg:col-span-3 glass-panel p-8 min-h-[60vh]">
+        <main class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <nav class="lg:col-span-1 flex flex-col gap-3">
+                <button onclick="showSection('recommender')" class="glass-panel p-4 rounded-xl text-left font-bold flex items-center gap-3 hover:bg-white/40 transition">
+                    <span class="material-symbols-outlined">auto_awesome</span> Music Station
+                </button>
+                <button onclick="showSection('playlist'); loadPlaylist();" class="glass-panel p-4 rounded-xl text-left font-bold flex items-center gap-3 hover:bg-white/40 transition">
+                    <span class="material-symbols-outlined">favorite</span> Liked Songs
+                </button>
+                <button onclick="showSection('events'); loadEvents();" class="glass-panel p-4 rounded-xl text-left font-bold flex items-center gap-3 hover:bg-white/40 transition">
+                    <span class="material-symbols-outlined">calendar_month</span> Music Events
+                </button>
+            </nav>
 
-            <div id="recommenderSection" class="content-section">
-                <div class="mb-10">
-                    <h2 class="text-4xl font-bold text-musicblue-dark mb-4">Discover the <span class="font-normal italic">sound</span> of Musicloud AI</h2>
-                    <div class="flex gap-3">
-                        <span class="glass-card px-4 py-1.5 text-xs">Parallel AI Processing</span>
-                        <span class="glass-card px-4 py-1.5 text-xs">Spotify Integration</span>
+            <section class="lg:col-span-3 glass-panel p-6 md:p-8 rounded-3xl min-h-[60vh]">
+                
+                <div id="recommenderSection" class="space-y-6">
+                    <div>
+                        <h2 class="text-2xl font-bold">Discover with Musicloud</h2>
+                        <p class="text-sm opacity-60">Type a song you love, and we will find similar musical patterns.</p>
                     </div>
-                </div>
 
-                <div class="relative mb-12">
-                    <input type="text" id="songSearch" placeholder="Search a song (e.g., 'Yellow')" class="w-full glass-input glass-card p-5 pl-14 text-xl rounded-full focus:outline-none focus:ring-2 focus:ring-musicblue">
-                    <span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-musicblue text-3xl">search</span>
-                    <div id="autocompleteList" class="absolute top-full left-0 right-0 mt-2 glass-panel p-3 max-h-60 overflow-y-auto hidden custom-scrollbar z-50"></div>
-                </div>
+                    <div class="relative">
+                        <input type="text" id="songSearch" placeholder="Search for a song..." 
+                               class="w-full glass-input p-4 pl-6 pr-12 rounded-full text-base focus:outline-none font-medium">
+                        <span class="material-symbols-outlined absolute right-4 top-4 opacity-40">search</span>
+                        
+                        <div id="suggestions" class="absolute left-0 right-0 mt-2 glass-panel rounded-2xl hidden z-50 max-h-60 overflow-y-auto p-2"></div>
+                    </div>
 
-                <div class="mb-6 flex justify-between items-center">
-                    <p class="font-medium">Selected: <span id="selectedSongName" class="font-bold text-musicblue-dark">None</span></p>
-                    <button onclick="getRecommendations()" id="recommendBtn" class="glass-btn px-8 py-3 flex items-center gap-2 font-semibold">
-                        <div id="btnContent" class="flex items-center gap-2">
-                            Show Recommendation <span class="material-symbols-outlined">auto_awesome</span>
-                        </div>
-                        <div id="btnLoader" class="hidden flex items-center gap-2">
-                            <div class="spinner"></div> <span>Analyzing...</span>
-                        </div>
+                    <button onclick="getRecommendations()" id="recBtn" class="bg-musicblue-dark text-white px-8 py-3 rounded-full font-bold flex items-center gap-2 hover:bg-musicblue-dark/90 transition shadow-lg">
+                        <span id="btnText">Get Recommendations</span>
+                        <div id="btnLoader" class="spinner hidden !w-4 !h-4 !border-white/20 !border-top-white"></div>
                     </button>
+
+                    <div id="recommendationsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 pt-4"></div>
                 </div>
 
-                <div id="recommendationsGrid" class="grid grid-cols-2 md:grid-cols-5 gap-5 hidden"></div>
-            </div>
-
-            <div id="playlistSection" class="content-section hidden">
-                <h2 class="text-3xl font-bold mb-8">My Liked Collection ❤️</h2>
-                <div id="playlistGrid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
-            </div>
-
-            <div id="eventsSection" class="content-section hidden">
-                <div class="flex items-center justify-between mb-8">
-                    <h2 class="text-3xl font-bold">Event Management</h2>
-                    <div class="flex gap-2">
-                        <button onclick="toggleEventView('add')" class="glass-btn px-4 py-2 text-sm">Add Event</button>
-                        <button onclick="toggleEventView('view')" class="glass-btn px-4 py-2 text-sm">View Events</button>
+                <div id="playlistSection" class="space-y-6 hidden">
+                    <div>
+                        <h2 class="text-2xl font-bold">Liked Collection </h2>
+                        <p class="text-sm opacity-60">Your personal curation of liked songs.</p>
                     </div>
+                    <div id="playlistGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4"></div>
                 </div>
 
-                <div id="addEventForm" class="glass-card p-6 space-y-4">
-                    <input type="text" id="eventName" placeholder="Event Name" class="glass-input p-3 w-full rounded-xl">
-                    <input type="datetime-local" id="eventTime" class="glass-input p-3 w-full rounded-xl">
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="number" id="eventCapacity" placeholder="Capacity" class="glass-input p-3 rounded-xl">
-                        <input type="number" id="eventCharges" placeholder="Price (INR)" class="glass-input p-3 rounded-xl">
+                <div id="eventsSection" class="space-y-6 hidden">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-2xl font-bold">Live Communities</h2>
+                            <p class="text-sm opacity-60">Host or find concerts and gatherings near you.</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="toggleEventView('view')" class="glass-btn px-4 py-2 rounded-lg text-xs font-bold">View Events</button>
+                            <button onclick="toggleEventView('add')" class="glass-btn px-4 py-2 rounded-lg text-xs font-bold">Create Event</button>
+                        </div>
                     </div>
-                    <button onclick="addEvent()" class="glass-btn w-full py-3 font-bold">Create Event</button>
+
+                    <div id="addEventForm" class="glass-card p-6 rounded-2xl max-w-xl space-y-4 hidden">
+                        <h3 class="text-lg font-bold">Schedule New Event</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="evtName" placeholder="Event Name" class="glass-input p-3 rounded-xl focus:outline-none">
+                            <input type="datetime-local" id="evtTime" class="glass-input p-3 rounded-xl focus:outline-none">
+                            <input type="number" id="evtCapacity" placeholder="Total Capacity Slots" class="glass-input p-3 rounded-xl focus:outline-none">
+                            <input type="text" id="evtCharges" placeholder="Ticket Charges (e.g., Free / $10)" class="glass-input p-3 rounded-xl focus:outline-none">
+                        </div>
+                        <button onclick="publishNewEvent()" class="bg-musicblue-dark text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-musicblue-dark/90 transition">Publish Event</button>
+                    </div>
+
+                    <div id="eventsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                 </div>
 
-                <div id="eventsList" class="hidden space-y-4"></div>
-            </div>
-        </section>
-    </main>
+            </section>
+        </main>
+    </div>
 
     <script>
-        // --- State Management ---
-        let allSongs = [];
-        let selectedSong = null;
+        let availableSongs = [];
+        let selectedSong = "";
+        let isSignUpMode = false;
 
-        const sidebar = document.getElementById('sidebar');
-        const songSearch = document.getElementById('songSearch');
-        const autocompleteList = document.getElementById('autocompleteList');
-        const recsGrid = document.getElementById('recommendationsGrid');
-        const btnContent = document.getElementById('btnContent');
-        const btnLoader = document.getElementById('btnLoader');
-        const recommendBtn = document.getElementById('recommendBtn');
+        // --- Authentication Engine ---
+        function toggleAuthMode() {
+            isSignUpMode = !isSignUpMode;
+            const title = document.getElementById('authTitle');
+            const subtitle = document.getElementById('authSubtitle');
+            const primaryBtn = document.getElementById('authPrimaryBtn');
+            const toggleText = document.getElementById('authToggleText');
+            const toggleBtn = document.getElementById('authToggleBtn');
 
-        // --- Navigation ---
-        document.getElementById('menuButton').addEventListener('click', () => sidebar.classList.toggle('hidden-nav'));
+            document.getElementById('authUsername').value = '';
+            document.getElementById('authPassword').value = '';
 
-        function showSection(sectionId) {
-            document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
-            document.getElementById(sectionId + 'Section').classList.remove('hidden');
-            if (sectionId === 'playlist') loadPlaylist();
-            if (sectionId === 'events') loadEvents();
+            if (isSignUpMode) {
+                title.textContent = "Join Musicloud";
+                subtitle.textContent = "Create an account to personalize your experience";
+                primaryBtn.textContent = "Register Account";
+                toggleText.textContent = "Already registered?";
+                toggleBtn.textContent = "Log In";
+            } else {
+                title.textContent = "Welcome to Musicloud";
+                subtitle.textContent = "Log in to start your musical journey";
+                primaryBtn.textContent = "Log In";
+                toggleText.textContent = "Don't have an account?";
+                toggleBtn.textContent = "Create Account";
+            }
         }
 
-        // --- Autocomplete Logic ---
+        async function handleAuthSubmit() {
+            const username = document.getElementById('authUsername').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+
+            if (!username || !password) {
+                alert("Please enter both username and password.");
+                return;
+            }
+
+            const endpoint = isSignUpMode ? '/api/signup' : '/api/login';
+            
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    if (isSignUpMode) {
+                        alert("Registration successful! Flipping to login mode.");
+                        toggleAuthMode();
+                    } else {
+                        document.getElementById('userDisplay').textContent = `Welcome, ${result.username}`;
+                        document.getElementById('authView').classList.add('hidden');
+                        document.getElementById('dashboardView').classList.remove('hidden');
+                        
+                        fetchSongs();
+                        showSection('recommender');
+                    }
+                } else {
+                    alert(result.error || "Authentication failed.");
+                }
+            } catch (e) {
+                alert("Unable to reach authentication backend.");
+            }
+        }
+
+        function handleLogout() {
+            document.getElementById('authUsername').value = '';
+            document.getElementById('authPassword').value = '';
+            document.getElementById('dashboardView').classList.add('hidden');
+            document.getElementById('authView').classList.remove('hidden');
+            if(isSignUpMode) toggleAuthMode();
+        }
+
+        // --- Core Music Features ---
         async function fetchSongs() {
             try {
-                const res = await fetch('/api/songs');
-                allSongs = await res.json();
-            } catch (e) { console.error("Could not fetch song list."); }
+                const response = await fetch('/api/songs');
+                availableSongs = await response.json();
+            } catch (e) {
+                console.error("Failed to load global songs lookup indices.", e);
+            }
         }
 
-        songSearch.addEventListener('input', (e) => {
-            const val = e.target.value.toLowerCase();
-            autocompleteList.innerHTML = '';
-            if (!val) { autocompleteList.classList.add('hidden'); return; }
-            
-            const matches = allSongs.filter(s => s.toLowerCase().includes(val)).slice(0, 10);
-            if (matches.length > 0) {
-                matches.forEach(song => {
-                    const item = document.createElement('div');
-                    item.className = 'px-4 py-2 cursor-pointer hover:bg-musicblue/20 rounded-lg text-musicblue-dark';
-                    item.textContent = song;
-                    item.onclick = () => {
-                        selectedSong = song;
-                        songSearch.value = song;
-                        document.getElementById('selectedSongName').textContent = song;
-                        autocompleteList.classList.add('hidden');
-                    };
-                    autocompleteList.appendChild(item);
-                });
-                autocompleteList.classList.remove('hidden');
+        function showSection(sectionId) {
+            ['recommender', 'playlist', 'events'].forEach(s => {
+                document.getElementById(`${s}Section`).classList.add('hidden');
+            });
+            document.getElementById(`${sectionId}Section`).classList.remove('hidden');
+        }
+
+        const searchInput = document.getElementById('songSearch');
+        const suggestionsBox = document.getElementById('suggestions');
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase().trim();
+            suggestionsBox.innerHTML = '';
+
+            if (!query) {
+                suggestionsBox.classList.add('hidden');
+                return;
+            }
+
+            const matches = availableSongs
+                .filter(song => song.toLowerCase().includes(query))
+                .slice(0, 8);
+
+            if (matches.length === 0) {
+                suggestionsBox.classList.add('hidden');
+                return;
+            }
+
+            matches.forEach(match => {
+                const row = document.createElement('div');
+                row.className = 'p-3 hover:bg-white/50 cursor-pointer rounded-xl text-sm font-semibold transition';
+                row.textContent = match;
+                row.onclick = () => {
+                    searchInput.value = match;
+                    selectedSong = match;
+                    suggestionsBox.classList.add('hidden');
+                };
+                suggestionsBox.appendChild(row);
+            });
+
+            suggestionsBox.classList.remove('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                suggestionsBox.classList.add('hidden');
             }
         });
 
-        // --- Recommendation Logic (High Speed) ---
         async function getRecommendations() {
-            if (!selectedSong) { alert("Please select a song first!"); return; }
-            
-            // Start Loading
-            btnContent.classList.add('hidden');
+            if (!selectedSong || searchInput.value !== selectedSong) {
+                alert("Please select a specific song verified from the matching query dropdown list.");
+                return;
+            }
+
+            const recBtn = document.getElementById('recBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const grid = document.getElementById('recommendationsGrid');
+
+            recBtn.disabled = true;
+            btnText.textContent = "Analyzing Lyrics...";
             btnLoader.classList.remove('hidden');
-            recommendBtn.disabled = true;
-            recsGrid.classList.add('hidden');
+            grid.innerHTML = '';
 
             try {
                 const res = await fetch(`/api/recommend?song=${encodeURIComponent(selectedSong)}`);
-                const data = await res.json();
-                renderRecommendations(data);
-            } catch (e) {
-                alert("Error fetching recommendations.");
-            } finally {
-                btnContent.classList.remove('hidden');
-                btnLoader.classList.add('hidden');
-                recommendBtn.disabled = false;
-            }
-        }
-
-        function renderRecommendations(recs) {
-            recsGrid.innerHTML = '';
-            recs.forEach(rec => {
-                const card = document.createElement('div');
-                card.className = 'glass-card p-4 space-y-2 relative group';
+                if (!res.ok) throw new Error("Recommendation endpoint failed.");
                 
-                const previewHtml = rec.preview
-                    ? `<audio controls><source src="${rec.preview}" type="audio/mpeg"></audio>`
-                    : `<p class="text-[10px] opacity-40 italic mt-2 text-center">Preview unavailable</p>`;
+                const data = await res.json();
 
-                card.innerHTML = `
-                    <div class="relative overflow-hidden rounded-xl">
-                        <img src="${rec.poster}" class="w-full aspect-square object-cover" loading="lazy">
-                        <button onclick='likeSong(${JSON.stringify(rec)})' class="absolute top-2 right-2 p-2 bg-black/20 backdrop-blur-md rounded-full heart-btn">
-                            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
-                        </button>
-                    </div>
-                    <p class="font-bold text-sm truncate mt-1">${rec.title}</p>
-                    <p class="text-xs opacity-60 truncate">${rec.artist}</p>
-                    ${previewHtml}
-                `;
-                recsGrid.appendChild(card);
-            });
-            recsGrid.classList.remove('hidden');
+                data.forEach(song => {
+                    const card = document.createElement('div');
+                    card.className = 'glass-card p-3 rounded-2xl text-center flex flex-col justify-between relative group';
+                    
+                    card.innerHTML = `
+                        <div class="relative overflow-hidden rounded-xl mb-2">
+                            <img src="${song.poster}" class="w-full aspect-square object-cover rounded-xl shadow-sm">
+                            <button onclick='likeSong(${JSON.stringify(song)})' 
+                                    class="absolute top-2 right-2 bg-white/80 backdrop-blur-xs p-1.5 rounded-full shadow hover:scale-110 active:scale-95 transition text-red-500 font-bold text-xs">
+                                ❤️
+                            </button>
+                        </div>
+                        <div class="mt-1 flex-grow">
+                            <h4 class="font-bold text-sm truncate text-musicblue-dark">${song.title}</h4>
+                            <p class="text-xs opacity-60 font-semibold truncate mt-0.5">${song.artist}</p>
+                        </div>
+                        ${song.preview ? `
+                            <audio src="${song.preview}" controls class="w-full mt-2.5 h-6 text-xs"></audio>
+                        ` : '<p class="text-[10px] opacity-40 italic mt-3">Preview unavailable</p>'}
+                    `;
+                    grid.appendChild(card);
+                });
+
+            } catch (e) {
+                alert("An error occurred calculating text similarity matrices.");
+            } finally {
+                recBtn.disabled = false;
+                btnText.textContent = "Get Recommendations";
+                btnLoader.classList.add('hidden');
+            }
         }
 
-        // --- Liked Collection ---
-        // Ensure this exists in your script block
         async function likeSong(song) {
-            try {
-                const response = await fetch('/api/like', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(song)
-                });
-                if (response.ok) {
-                    alert("Added to Liked Collection ❤️");
-                }
-            } catch (e) {
-                console.error("Error liking song:", e);
-            }
+            await fetch('/api/like', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(song)
+            });
+            alert("Added to Liked Collection ❤️");
         }
 
         async function loadPlaylist() {
             const grid = document.getElementById('playlistGrid');
-            grid.innerHTML = '<div class="spinner"></div>';
+            grid.innerHTML = '<div class="col-span-4 flex justify-center py-8"><div class="spinner"></div></div>';
             const res = await fetch('/api/playlist');
             const data = await res.json();
             grid.innerHTML = '';
-            if (data.length === 0) {
-                grid.innerHTML = '<p class="col-span-4 opacity-50 italic">Your collection is currently empty.</p>';
-                return;
-            }
+            if (data.length === 0) grid.innerHTML = '<p class="col-span-4 opacity-50">Your collection is empty.</p>';
             data.forEach(item => {
                 grid.innerHTML += `
-                    <div class="glass-card p-4 text-center">
-                        <img src="${item.poster}" class="rounded-lg mb-3 shadow-lg">
+                    <div class="glass-card p-4 text-center rounded-2xl">
+                        <img src="${item.poster}" class="rounded-lg mb-3 shadow">
                         <p class="font-bold text-sm truncate">${item.title}</p>
                         <p class="text-xs opacity-60">${item.artist}</p>
                     </div>
@@ -323,117 +439,134 @@
             });
         }
 
-        // --- Event Management Logic ---
+        // --- Events Logic ---
+        // --- Events Logic ---
         function toggleEventView(v) {
             document.getElementById('addEventForm').classList.toggle('hidden', v !== 'add');
             document.getElementById('eventsList').classList.toggle('hidden', v !== 'view');
         }
 
-        async function addEvent() {
-            const data = {
-                name: document.getElementById('eventName').value,
-                time: document.getElementById('eventTime').value,
-                capacity: document.getElementById('eventCapacity').value,
-                charges: document.getElementById('eventCharges').value
-            };
+        // Change from: async function createEvent() { 
+// To exactly this:
+async function publishNewEvent() {
+    const name = document.getElementById('evtName').value.trim();
+    const time = document.getElementById('evtTime').value;
+    const capacityRaw = document.getElementById('evtCapacity').value;
+    const charges = document.getElementById('evtCharges').value.trim();
 
-            if(!data.name || !data.time) { alert("Please fill in event name and time."); return; }
-
-            const res = await fetch('/api/events', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-
-            if(res.ok) {
-                alert("Event Created Successfully!");
-                document.getElementById('eventName').value = '';
-                toggleEventView('view');
-                loadEvents();
-            }
-        }
-
-        async function loadEvents() {
-    const list = document.getElementById('eventsList');
-    const res = await fetch('/api/events');
-    const events = await res.json();
-    list.innerHTML = '';
-    
-    events.forEach(e => {
-        const isFull = e.participants.length >= e.capacity;
-        const item = document.createElement('div');
-        item.className = 'glass-card p-6 mb-4';
-        item.innerHTML = `
-            <div class="flex justify-between items-start">
-                <div>
-                    <h4 class="text-xl font-bold">${e.event_name}</h4>
-                    <p class="text-sm opacity-70">${e.event_time}</p>
-                    <p class="text-xs mt-1 font-bold ${isFull ? 'text-red-500' : 'text-green-600'}">
-                        Slot: ${e.participants.length} / ${e.capacity} ${isFull ? '(FULL)' : ''}
-                    </p>
-                </div>
-                <button onclick="deleteEvent(${e.event_id})" class="text-red-400">
-                    <span class="material-symbols-outlined">delete</span>
-                </button>
-            </div>
-            
-            <div class="mt-4 flex gap-2">
-                <input type="text" id="userInput-${e.event_id}" placeholder="Your Name"
-                       class="glass-input p-2 text-sm rounded-lg flex-grow" ${isFull ? 'disabled' : ''}>
-                <button onclick="joinEvent(${e.event_id})"
-                        class="glass-btn px-4 py-2 text-sm font-bold" ${isFull ? 'disabled' : ''}>
-                    ${isFull ? 'Closed' : 'Join Event'}
-                </button>
-            </div>
-        `;
-        list.appendChild(item);
-    });
-}
-        async function joinEvent(eventId) {
-    const nameInput = document.getElementById(`userInput-${eventId}`);
-    const userName = nameInput.value.trim();
-
-    if (!userName) {
-        alert("Please enter your name to join.");
+    if(!name || !time || !capacityRaw || !charges) {
+        alert("Please fill all event descriptors.");
         return;
     }
 
-    const data = { 
-        event_id: eventId, 
-        user_name: userName 
-    };
+    const capacity = parseInt(capacityRaw, 10);
+    const payload = { name, time, capacity, charges };
 
     try {
-        const response = await fetch('/api/participate', {
+        const res = await fetch('/api/events', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(payload)
         });
 
-        const result = await response.json();
-
-        if (response.ok) {
-            alert("Success! You have joined the event.");
-            nameInput.value = ''; // Clear the input
-            loadEvents(); // Refresh the list to show updated slots
+        if(res.ok) {
+            alert("Event published successfully!");
+            document.getElementById('evtName').value = '';
+            document.getElementById('evtTime').value = '';
+            document.getElementById('evtCapacity').value = '';
+            document.getElementById('evtCharges').value = '';
+            toggleEventView('view');
+            loadEvents();
         } else {
-            alert(result.error || "Failed to join event.");
+            alert("Server rejected payload schema configuration.");
         }
     } catch (e) {
-        console.error("Error:", e);
-        alert("Could not connect to server.");
+        alert("Network boundary connection error.");
     }
 }
+        async function loadEvents() {
+            const list = document.getElementById('eventsList');
+            if (!list) return;
+            list.innerHTML = '<div class="col-span-2 flex justify-center py-8"><div class="spinner"></div></div>';
+            
+            try {
+                const res = await fetch('/api/events');
+                const events = await res.json();
+                list.innerHTML = '';
+                
+                if(events.length === 0) {
+                    list.innerHTML = '<p class="col-span-2 opacity-50 italic">No events scheduled currently.</p>';
+                    return;
+                }
+
+                events.forEach(e => {
+                    const isFull = e.participants.length >= e.capacity;
+                    const item = document.createElement('div');
+                    item.className = 'glass-card p-6 rounded-2xl';
+                    item.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="text-xl font-bold">${e.event_name}</h4>
+                                <p class="text-sm opacity-70">${e.event_time}</p>
+                                <p class="text-xs mt-1 font-bold ${isFull ? 'text-red-500' : 'text-green-600'}">
+                                    Slot: ${e.participants.length} / ${e.capacity} ${isFull ? '(FULL)' : ''}
+                                </p>
+                            </div>
+                            <button onclick="deleteEvent(${e.event_id})" class="text-red-400">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </div>
+                        
+                        <div class="mt-4 flex gap-2">
+                            <input type="text" id="userInput-${e.event_id}" placeholder="Your Name"
+                                   class="glass-input p-2 text-sm rounded-lg flex-grow" ${isFull ? 'disabled' : ''}>
+                            <button onclick="joinEvent(${e.event_id})"
+                                    class="glass-btn px-4 py-2 text-sm font-bold rounded-lg" ${isFull ? 'disabled' : ''}>
+                                ${isFull ? 'Closed' : 'Join Event'}
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch (err) {
+                list.innerHTML = '<p class="col-span-2 text-red-500">Error loading events list.</p>';
+            }
+        }
+
+        async function joinEvent(eventId) {
+            const nameInput = document.getElementById(`userInput-${eventId}`);
+            const userName = nameInput.value.trim();
+
+            if (!userName) {
+                alert("Please enter your name to join.");
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/participate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ event_id: eventId, user_name: userName })
+                });
+
+                if (response.ok) {
+                    alert("Success! You have joined the event.");
+                    nameInput.value = '';
+                    loadEvents();
+                } else {
+                    const result = await response.json();
+                    alert(result.error || "Failed to join event.");
+                }
+            } catch (e) {
+                alert("Could not connect to server.");
+            }
+        }
 
         async function deleteEvent(id) {
             if(!confirm("Delete this event?")) return;
             await fetch(`/api/events?id=${id}`, { method: 'DELETE' });
             loadEvents();
         }
-
-        // Initial Start
-        fetchSongs();
-        showSection('recommender');
     </script>
 </body>
 </html>
