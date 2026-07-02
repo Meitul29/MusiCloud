@@ -1,4 +1,4 @@
-```
+
 # 🎵 MusiCloud
 
 An AI-powered music discovery platform and community hub that utilizes **Flask**, **HTML5/TailwindCSS**, and **Machine Learning** (TF-IDF & Cosine Similarity) to calculate textual song likeness and recommend matching musical profiles.
@@ -9,7 +9,7 @@ An AI-powered music discovery platform and community hub that utilizes **Flask**
 - **❤️ Liked Collection Tracker**: Instantly favorite songs from your recommendation tray and manage your personal saved collection.
 - **🎫 Event Management Dashboard**: Host or join live music communities, schedule upcoming concerts, track venue capacity limits, manage ticket charges, and register participants seamlessly.
 - **🖼️ Real-Time Album Art**: Dynamically fetches high-resolution album cover imagery via external API indexing to build an immersive user interface.
-```
+
 ## 📁 Project Structure
 `
 ├── app.py                      # Core Flask backend application & API routing
