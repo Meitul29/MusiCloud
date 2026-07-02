@@ -1,133 +1,109 @@
-# 🎵 Musicloud
+```
+# 🎵 MusiCloud
 
-A Python-based music recommendation system using **Streamlit**, **Spotify API**, and **Machine Learning** (TF-IDF & Cosine Similarity).
+An AI-powered music discovery platform and community hub that utilizes **Flask**, **HTML5/TailwindCSS**, and **Machine Learning** (TF-IDF & Cosine Similarity) to calculate textual song likeness and recommend matching musical profiles.
 
 ## ✨ Features
 
-- **🎵 Music Recommendations**: Content-based filtering using TF-IDF and cosine similarity
-- **📝 Playlist Management**: Create, manage, and delete custom playlists (stored in JSON)
-- **🎫 Event Management**: Create music events with capacity limits, charges, and participant registration (stored in JSON)
-- **🎨 Album Covers**: Fetch album art using Spotify API (optional)
+- **🎯 Lyric-Based Matchmaking**: Advanced content-based filtering matching lyrical signatures via text vector similarity.
+- **❤️ Liked Collection Tracker**: Instantly favorite songs from your recommendation tray and manage your personal saved collection.
+- **🎫 Event Management Dashboard**: Host or join live music communities, schedule upcoming concerts, track venue capacity limits, manage ticket charges, and register participants seamlessly.
+- **🖼️ Real-Time Album Art**: Dynamically fetches high-resolution album cover imagery via external API indexing to build an immersive user interface.
 
 ## 📁 Project Structure
 
-```
-├── app.py                      # Main Streamlit application
-├── data_cleaning.py            # Preprocesses CSV and generates pkl files
-├── spotify_millsongdata.csv    # Music dataset
-├── df.pkl                      # Processed dataframe (generated)
-├── similarity.pkl              # Similarity matrix (generated)
-├── playlists.json              # Playlist storage
-├── events.json                 # Event storage
-├── requirements.txt            # Python dependencies
-├── .env                        # Environment variables (create from .env.example)
-└── README.md                   # This file
+
 ```
 
-## 🚀 Installation
+├── app.py                      # Core Flask backend application & API routing
+├── data_cleaning.py            # Cleans raw lyrics text and creates memory-efficient artifacts
+├── spotify_millsongdata.csv    # Historical music library and lyrics dataset
+├── df.pkl                      # Compressed structural text and metadata file (generated)
+├── similarity.pkl              # Pre-calculated Cosine Similarity matrix file (generated)
+├── events.json                 # Shared relational data hub for community listings
+├── account_info.json           # Secured credential dictionary mapping user accounts
+├── requirements.txt            # Project python package dependencies
+├── .env                        # Private access keys and environmental variable strings
+└── README.md                   # System configuration and usage guide
 
-### 1. Clone the repository
+```
 
+## 🚀 Installation & Setup
+
+### 1. Clone the Repository
 ```bash
 git clone <your-repo-url>
 cd music-recommendation-system
+
 ```
 
-### 2. Install dependencies
+### 2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
+
 ```
 
-### 3. Set up environment variables (Optional - for album covers)
+### 3. Add API Credentials
 
-Create a `.env` file in the project root:
+Create a `.env` file in the project root directory to safely hold your external API connection access tokens:
 
 ```env
-SPOTIFY_CLIENT_ID=your_spotify_client_id
-SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+RAPIDAPI_KEY=your_rapidapi_key_here
+RAPIDAPI_HOST=your_spotify_api_host_here
+
 ```
 
-To get Spotify API credentials:
-1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-2. Create a new app
-3. Copy Client ID and Client Secret
+### 4. Compile the Mathematical Similarity Matrices
 
-### 4. Generate pickle files
-
-**IMPORTANT**: Before running the app, you must preprocess the data:
+**CRITICAL**: Before running the engine, you must pre-process your music library dataset to serialize the data objects:
 
 ```bash
 python data_cleaning.py
+
 ```
 
-This will generate:
-- `df.pkl` - Cleaned and processed dataframe
-- `similarity.pkl` - Cosine similarity matrix for recommendations
+This script will read the raw text features, vectorize word weights, and establish two serialized binary files (`df.pkl` and `similarity.pkl`) so your engine boots instantly.
 
-### 5. Run the application
+### 5. Launch the Platform
 
 ```bash
-streamlit run app.py
+python app.py
+
 ```
 
-The app will open at `https://17ppj2gk-8501.inc1.devtunnels.ms/`
+Your local development server will start. Open your web browser and navigate to your active routing tunnel link or standard local network hosting address to explore MusiCloud.
 
-## 🎯 Usage
+## 🎯 Platform Architecture & Usage
 
-### Music Recommendations
-1. Browse songs by genre or search by name/artist
-2. Select a song and click "Get Recommendations" to find similar songs
-3. Add songs to your playlists
+### 🧠 Music AI Station
 
-### Playlist Management
-New Feature is coming soon!
+1. Enter your favorite track title into the responsive predictive search query filter dropdown menu.
+2. Hit **Get Recommendations** to query the server. The backend parses the target track index across the similarity grid matrix to find the top 5 highest-scoring mathematical relationships.
+3. Tap the **❤️** button on any recommendation card to instantly add that song to your persistent favorites registry.
 
-### Event Management
-1. Create music events with:
-   - Event name
-   - Date
-   - Capacity
-   - Entry charges
-2. Register participants (auto-closes when capacity is full)
-3. View participant lists
-4. Delete events
+### 🎫 Community Events Manager
 
-## 📊 Dataset
-
-The project uses `spotify_millsongdata.csv` containing:
-- Song names
-- Artist names
-- Genre/category (link column)
-- Lyrics/text features
+1. Toggle the views to access the **Schedule New Event** window.
+2. Input the event variables: Name, Scheduled Date/Time, Guest Capacity Limit, and Entry Fees.
+3. Click **Publish Event** to push the data payload directly into the storage registry.
+4. Fans can type in their registration name to claim ticket allocations in real-time until slots say `(FULL)`.
 
 ## 🔧 Technologies Used
 
-- **Python 3.8+**
-- **Streamlit** - Web framework
-- **Pandas** - Data manipulation
-- **Scikit-learn** - TF-IDF & Cosine Similarity
-- **NLTK** - Text preprocessing
-- **Spotipy** - Spotify API integration
-- **Pickle/Joblib** - Model persistence
+* **Python 3.8+**
+* **Flask** – Backend micro-framework & API route architecture
+* **JavaScript (ES6+) & TailwindCSS** – Single-page asynchronous client layout engine
+* **Scikit-learn** – TF-IDF Vectorizer modeling & Cosine Similarity mathematical computations
+* **Joblib / Pickle** – Model persistence and system serialization
+* **RapidAPI / Spotify Web API** – Distributed content ingestion pipelines
 
-## 📝 Data Storage
+## 📝 Persistent Storage Map
 
-- **Playlists**: Stored in `playlists.json`
-- **Events**: Stored in `events.json`
-- **Processed Data**: Stored in `df.pkl` and `similarity.pkl`
+* **User Accounts**: Kept in `account_info.json`
+* **Community Schedules**: Tracked in `events.json`
+* **Text Vectors**: Frozen inside `df.pkl` and `similarity.pkl`
 
-  
-## 🤝 Contributing
+```
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🎉 Acknowledgments
-
-- Spotify Million Song Dataset
-- Streamlit community
-- Spotify Web API
+```
