@@ -20,9 +20,9 @@ An AI-powered music discovery platform and community hub that utilizes **Flask**
 ├── account_info.json           # Secured credential dictionary mapping user accounts
 ├── requirements.txt            # Project python package dependencies
 ├── .env                        # Private access keys and environmental variable strings
-└── README.md                   # System configuration and usage guide
 ├── clean_data.csv              # Hindi music library and lyrics dataset
 ├── spotify_millsongdata.csv    # Historical music library and lyrics dataset
+└── README.md                   # System configuration and usage guide
 
 ````
 
