@@ -14,7 +14,6 @@ An AI-powered music discovery platform and community hub that utilizes **Flask**
 ````
 ├── app.py                      # Core Flask backend application & API routing
 ├── data_cleaning.py            # Cleans raw lyrics text and creates memory-efficient artifacts
-├── spotify_millsongdata.csv    # Historical music library and lyrics dataset
 ├── df.pkl                      # Compressed structural text and metadata file (generated)
 ├── similarity.pkl              # Pre-calculated Cosine Similarity matrix file (generated)
 ├── events.json                 # Shared relational data hub for community listings
@@ -22,6 +21,8 @@ An AI-powered music discovery platform and community hub that utilizes **Flask**
 ├── requirements.txt            # Project python package dependencies
 ├── .env                        # Private access keys and environmental variable strings
 └── README.md                   # System configuration and usage guide
+├── clean_data.csv              # Hindi music library and lyrics dataset
+├── spotify_millsongdata.csv    # Historical music library and lyrics dataset
 
 ````
 
@@ -84,7 +85,8 @@ Your local development server will start. Open your web browser and navigate to 
 1. Toggle the views to access the **Schedule New Event** window.
 2. Input the event variables: Name, Scheduled Date/Time, Guest Capacity Limit, and Entry Fees.
 3. Click **Publish Event** to push the data payload directly into the storage registry.
-4. Fans can type in their registration name to claim ticket allocations in real-time until slots say `(FULL)`.
+4. Click **Members** logo to look at the enrolled members of the event.
+5. Fans can type in their registration name to claim ticket allocations in real-time until slots say `(FULL)`.
 
 ## 🔧 Technologies Used
 
