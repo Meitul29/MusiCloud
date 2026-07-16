@@ -501,8 +501,16 @@ async function publishNewEvent() {
 
                 events.forEach(e => {
                     const isFull = e.participants.length >= e.capacity;
+                    
+                    // NEW: Create HTML for the participants list
+                    const participantsList = e.participants.length > 0 
+                        ? e.participants.map(p => `<li class="text-sm opacity-80 py-1 border-b border-white/20 last:border-0">${p}</li>`).join('') 
+                        : '<li class="text-sm opacity-60 italic py-1">No members yet.</li>';
+
                     const item = document.createElement('div');
                     item.className = 'glass-card p-6 rounded-2xl';
+                    
+                    // NEW: Added the Members button and the hidden Members list section
                     item.innerHTML = `
                         <div class="flex justify-between items-start">
                             <div>
@@ -512,9 +520,22 @@ async function publishNewEvent() {
                                     Slot: ${e.participants.length} / ${e.capacity} ${isFull ? '(FULL)' : ''}
                                 </p>
                             </div>
-                            <button onclick="deleteEvent(${e.event_id})" class="text-red-400">
-                                <span class="material-symbols-outlined">delete</span>
-                            </button>
+                            <div class="flex gap-2">
+                                <button onclick="toggleMembers(${e.event_id})" class="text-musicblue-dark hover:text-musicblue-light transition bg-white/40 p-1.5 rounded-full shadow-sm" title="View Members">
+                                    <span class="material-symbols-outlined text-sm">group</span>
+                                </button>
+                                <button onclick="deleteEvent(${e.event_id})" class="text-red-400 hover:text-red-600 transition bg-white/40 p-1.5 rounded-full shadow-sm" title="Delete Event">
+                                    <span class="material-symbols-outlined text-sm">delete</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Hidden Members Section -->
+                        <div id="members-${e.event_id}" class="hidden mt-3 p-3 bg-white/30 backdrop-blur-md rounded-xl max-h-32 overflow-y-auto border border-white/40 shadow-inner">
+                            <h5 class="text-xs font-bold mb-2 uppercase tracking-wider opacity-80">Participants</h5>
+                            <ul class="list-inside list-disc pl-2">
+                                ${participantsList}
+                            </ul>
                         </div>
                         
                         <div class="mt-4 flex gap-2">
@@ -530,6 +551,16 @@ async function publishNewEvent() {
                 });
             } catch (err) {
                 list.innerHTML = '<p class="col-span-2 text-red-500">Error loading events list.</p>';
+            }
+        }
+
+        // NEW: Function to slide open/close the members list
+        function toggleMembers(eventId) {
+            const membersDiv = document.getElementById(`members-${eventId}`);
+            if (membersDiv.classList.contains('hidden')) {
+                membersDiv.classList.remove('hidden');
+            } else {
+                membersDiv.classList.add('hidden');
             }
         }
 
