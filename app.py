@@ -36,7 +36,16 @@ def get_spotify_data(song_row):
         return default_data
 
     url = f"https://{RAPIDAPI_HOST}/search/"
-    querystring = {"q": f"{song_name} {artist_name}", "type": "tracks", "offset": "0", "limit": "1"}
+    
+    # ---------------------------------------------------------
+    # NEW: Adjust search query for our missing Hindi song artists
+    # ---------------------------------------------------------
+    if artist_name == "Bollywood / Hindi":
+        search_query = f"{song_name} Bollywood"
+    else:
+        search_query = f"{song_name} {artist_name}"
+        
+    querystring = {"q": search_query, "type": "tracks", "offset": "0", "limit": "1"}
 
     try:
         response = requests.get(url, headers=headers, params=querystring, timeout=3)
